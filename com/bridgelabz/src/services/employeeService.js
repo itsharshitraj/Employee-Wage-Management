@@ -1,9 +1,7 @@
+const {calculateDailyWage} = require("../utils/employeeUtils");
 
-    const { checkEmployeePresence } = require("../utils/employeeUtils");
+const processEmployeeWage=()=>{
+    console.log("Daily Wage: $" + calculateDailyWage());
 
-    const checkAttendance = () => {
-        
-        console.log("Employee is:", checkEmployeePresence());
-    };
-
-    module.exports = { checkAttendance };
+};
+    module.exports = { processEmployeeWage };
