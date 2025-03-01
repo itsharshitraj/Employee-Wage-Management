@@ -6,25 +6,29 @@
     const FULL_TIME_HOURS=8;
     const WAGE_PER_HOURS=20;
 
-    // Calculates daily wage based on work type
-    const calculateDailyWage= () => {
+    // work hours based on employee type
+    const getWorkHours= () => {
         let empCheck = Math.floor(Math.random()*10)%3;
-        let workHours=0;
-
+     
         switch(empCheck){
             case PART_TIME:
-            workHours= PART_TIME_HOURS;
-            break;
+            return PART_TIME_HOURS;
+            
                 
             case FULL_TIME:
-                workHours= FULL_TIME_HOURS;
-                break;
+                return FULL_TIME_HOURS;
+               
             
             default:
-            workHours=0;    
+            return 0;    
         }
-        return workHours*WAGE_PER_HOURS;
+      
+    };
+
+    // Calculates daily wage using work hours.
+    const calculateDailyWage = () => {
+        return getWorkHours() * WAGE_PER_HOURS;
     };
 
 
-    module.exports = { calculateDailyWage};
+    module.exports = { getWorkHours,calculateDailyWage};
