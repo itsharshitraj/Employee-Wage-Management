@@ -2,6 +2,6 @@
     const employeeService = require("./services/employeeService");
 
    
-    employeeService.processEmployeeWage();  
+    employeeService.processEmployeeMonthlyWage();  
 
 
