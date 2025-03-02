@@ -6,6 +6,7 @@
     const FULL_TIME_HOURS=8;
     const WAGE_PER_HOURS=20;
     const WORKING_DAYS_IN_MONTH = 20;
+    const MAX_WORKING_HOURS = 160;
 
     // work hours based on employee type
     const getWorkHours = () => {
@@ -25,21 +26,22 @@
       
     };
 
-    // Calculates daily wage using work hours.
-    const calculateDailyWage = () => {
-        let workHours=getWorkHours();
-        return workHours * WAGE_PER_HOURS;
+    // Calculates monthly wage until work hours or days limit is reached.
+
+    const calculateConditionalWage = () => {
+       let totalWorkHours = 0;
+       let totalDays=0;
+       let totalWage = 0;
+
+       while(totalWorkHours < MAX_WORKING_HOURS && totalDays < WORKING_DAYS_IN_MONTH){
+        let workHour = getWorkHours();
+        totalWorkHours += workHour;
+        totalDays++;
+        totalWage += workHour * WAGE_PER_HOURS;
+       }
+       console.log(`Total Days Worked: ${totalDays}, Total Hours Worked: ${totalWorkHours}`);
+       return totalWage;
     };
+    
 
-    // Calculates monthly wage for 20 working days.
-
-    const calculateMonthlyWage = () => {
-        let totalWage=0;
-        for(let day=1; day<=WORKING_DAYS_IN_MONTH;day++){
-            let dailyWage = calculateDailyWage();
-            totalWage += dailyWage;
-        }
-        return totalWage;
-    };
-
-    module.exports = { getWorkHours,calculateDailyWage,calculateMonthlyWage};
+    module.exports = { getWorkHours,calculateConditionalWage};

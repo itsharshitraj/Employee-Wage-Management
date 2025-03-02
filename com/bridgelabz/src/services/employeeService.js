@@ -1,8 +1,8 @@
-const {calculateMonthlyWage} = require("../utils/employeeUtils");
+const {calculateConditionalWage} = require("../utils/employeeUtils");
 
-const processEmployeeMonthlyWage = () =>{
-    let monthlyWage = calculateMonthlyWage();
-    console.log("Monthly Wage: $" + monthlyWage);
+const processConditionalWage = () =>{
+    let totalWage = calculateConditionalWage();
+    console.log("Total Wage: $" + totalWage);
 
 };
-    module.exports = { processEmployeeMonthlyWage };
+    module.exports = {processConditionalWage };
