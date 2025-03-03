@@ -20,59 +20,47 @@ const getWorkHours = () => {
     }
 };
 
-// Function to calculate wages and store daily wages
+// Function to calculate wages and store daily wages in a Map
 const calculateConditionalWage = () => {
     let totalWorkHours = 0;
     let totalDays = 0;
     let totalWage = 0;
-    let dailyWages = [];  // Array to store daily wages
-    let dailyHours = [];  // Store daily working hours
+    let dailyWageMap = new Map();  // Map to store day-wise wage
 
     while (totalWorkHours < MAX_WORKING_HOURS && totalDays < WORKING_DAYS_IN_MONTH) {
         let workHour = getWorkHours();
         let dailyWage = workHour * WAGE_PER_HOUR;
-        dailyWages.push(dailyWage); // Store daily wage
-        dailyHours.push(workHour);
-        totalWorkHours += workHour;
         totalDays++;
+        totalWorkHours += workHour;
         totalWage += dailyWage;
+        
+        // Store in Map (Day -> Wage)
+        dailyWageMap.set(totalDays, dailyWage);
     }
 
     console.log(`Total Days Worked: ${totalDays}, Total Hours Worked: ${totalWorkHours}`);
-    return { totalWage, dailyWages,dailyHours };
+    return { totalWage, dailyWageMap };
 };
 
-// (a) Calculate total wage using reduce()
-const calculateTotalWage = (dailyWages) => dailyWages.reduce((total, wage) => total + wage, 0);
+// (a) Compute Total Wage using Map
+const computeTotalWageFromMap = (dailyWageMap) => {
+    let totalWage = 0;
+    dailyWageMap.forEach(wage => totalWage += wage);
+    return totalWage;
+};
 
-// (b) Show day and wage using map()
-const getDailyWageWithDay = (dailyWages) => 
-    dailyWages.map((wage, index) => `Day ${index + 1}: $${wage}`);
+// (b) Show Day-wise Wage using Map
+const getDailyWageWithDayFromMap = (dailyWageMap) => {
+    let dayWiseWages = [];
+    dailyWageMap.forEach((wage, day) => {
+        dayWiseWages.push(`Day ${day}: $${wage}`);
+    });
+    return dayWiseWages;
+};
 
-// (c) Filter days when full-time wage (160) was earned
-const getFullTimeWageDays = (dailyWages) => 
-    dailyWages.filter(wage => wage === FULL_TIME_HOURS * WAGE_PER_HOUR);
-
-// (d) Find first occurrence of full-time wage
-const getFirstFullTimeWageDay = (dailyWages) => 
-    dailyWages.find(wage => wage === FULL_TIME_HOURS * WAGE_PER_HOUR);
-
-// (e) Check if all full-time wages are correct
-const checkAllFullTimeWages = (dailyWages) => 
-    dailyWages.every(wage => wage === FULL_TIME_HOURS * WAGE_PER_HOUR);
-
-// (f) Check if there is any part-time wage
-const hasPartTimeWage = (dailyWages) => 
-    dailyWages.some(wage => wage === PART_TIME_HOURS * WAGE_PER_HOUR);
-
-// (g) Count number of days employee worked
-const getTotalDaysWorked = (dailyWages) => 
-    dailyWages.length;
-
-module.exports = { getWorkHours, calculateConditionalWage, calculateTotalWage,
-    getDailyWageWithDay,
-    getFullTimeWageDays,
-    getFirstFullTimeWageDay,
-    checkAllFullTimeWages,
-    hasPartTimeWage,
-    getTotalDaysWorked};
+module.exports = { 
+    getWorkHours, 
+    calculateConditionalWage,
+    computeTotalWageFromMap,
+    getDailyWageWithDayFromMap
+};
