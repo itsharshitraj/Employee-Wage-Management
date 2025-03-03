@@ -1,7 +1,4 @@
+const employeeService = require("./services/employeeService");
 
-    const employeeService = require("./services/employeeService");
-
-   
-    employeeService.processConditionalWage();  
-
-
+// Start the wage calculation process
+employeeService.processConditionalWage();
