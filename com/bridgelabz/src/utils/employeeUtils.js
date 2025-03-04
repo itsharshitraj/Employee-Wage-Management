@@ -20,47 +20,46 @@ const getWorkHours = () => {
     }
 };
 
-// Function to calculate wages and store daily wages in a Map
-const calculateConditionalWage = () => {
-    let totalWorkHours = 0;
-    let totalDays = 0;
+// Calculate wage & store in Maps
+const calculateWageAndStoreInMap = () => {
+    let totalWorkHours = 0, totalDays = 0;
     let totalWage = 0;
-    let dailyWageMap = new Map();  // Map to store day-wise wage
+    
+    let dailyWageMap = new Map();
+    let dailyHoursMap = new Map();
 
     while (totalWorkHours < MAX_WORKING_HOURS && totalDays < WORKING_DAYS_IN_MONTH) {
-        let workHour = getWorkHours();
-        let dailyWage = workHour * WAGE_PER_HOUR;
         totalDays++;
-        totalWorkHours += workHour;
-        totalWage += dailyWage;
+        let workHours = getWorkHours();
+        totalWorkHours += workHours;
         
-        // Store in Map (Day -> Wage)
+        let dailyWage = workHours * WAGE_PER_HOUR;
+        totalWage += dailyWage;
+
         dailyWageMap.set(totalDays, dailyWage);
+        dailyHoursMap.set(totalDays, workHours);
     }
 
-    console.log(`Total Days Worked: ${totalDays}, Total Hours Worked: ${totalWorkHours}`);
-    return { totalWage, dailyWageMap };
+    console.log(`Total Days: ${totalDays}, Total Hours: ${totalWorkHours}, Total Wage: ${totalWage}`);
+    return { dailyWageMap, dailyHoursMap, totalWorkHours, totalWage };
 };
 
-// (a) Compute Total Wage using Map
-const computeTotalWageFromMap = (dailyWageMap) => {
-    let totalWage = 0;
-    dailyWageMap.forEach(wage => totalWage += wage);
-    return totalWage;
+// Compute total wage & total hours using Arrow Function & reduce()
+const computeTotalWageAndHours = (dailyWageMap, dailyHoursMap) => {
+    let totalWage = Array.from(dailyWageMap.values()).reduce((acc, wage) => acc + wage, 0);
+    let totalHours = Array.from(dailyHoursMap.values()).reduce((acc, hours) => acc + hours, 0);
+    return { totalWage, totalHours };
 };
 
-// (b) Show Day-wise Wage using Map
-const getDailyWageWithDayFromMap = (dailyWageMap) => {
-    let dayWiseWages = [];
-    dailyWageMap.forEach((wage, day) => {
-        dayWiseWages.push(`Day ${day}: $${wage}`);
-    });
-    return dayWiseWages;
+// Classify days using filter()
+const classifyWorkingDays = (dailyHoursMap) => {
+    let fullWorkingDays = Array.from(dailyHoursMap.entries()).filter(([day, hours]) => hours === 8).map(([day]) => day);
+    let partWorkingDays = Array.from(dailyHoursMap.entries()).filter(([day, hours]) => hours > 0 && hours < 8).map(([day]) => day);
+    let noWorkingDays = Array.from(dailyHoursMap.entries()).filter(([day, hours]) => hours === 0).map(([day]) => day);
+
+    return { fullWorkingDays, partWorkingDays, noWorkingDays };
 };
 
 module.exports = { 
-    getWorkHours, 
-    calculateConditionalWage,
-    computeTotalWageFromMap,
-    getDailyWageWithDayFromMap
+    calculateWageAndStoreInMap, computeTotalWageAndHours, classifyWorkingDays
 };
