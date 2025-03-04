@@ -1,4 +1,4 @@
 const employeeService = require("./services/employeeService");
 
 // Start the wage calculation process
-employeeService.processConditionalWage();
+employeeService.processWageAndHours();
