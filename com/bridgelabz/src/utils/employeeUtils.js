@@ -19,47 +19,32 @@ const getWorkHours = () => {
             return 0;
     }
 };
-
-// Calculate wage & store in Maps
-const calculateWageAndStoreInMap = () => {
-    let totalWorkHours = 0, totalDays = 0;
-    let totalWage = 0;
-    
-    let dailyWageMap = new Map();
-    let dailyHoursMap = new Map();
+// Function to calculate wages and store data in an array of objects
+const calculateEmployeeWages = () => {
+    let totalWorkHours = 0;
+    let totalDays = 0;
+    let employeeDailyRecords = [];
 
     while (totalWorkHours < MAX_WORKING_HOURS && totalDays < WORKING_DAYS_IN_MONTH) {
-        totalDays++;
         let workHours = getWorkHours();
         totalWorkHours += workHours;
-        
-        let dailyWage = workHours * WAGE_PER_HOUR;
-        totalWage += dailyWage;
+        totalDays++;
 
-        dailyWageMap.set(totalDays, dailyWage);
-        dailyHoursMap.set(totalDays, workHours);
+        let dailyWage = workHours * WAGE_PER_HOUR;
+        
+        // Storing in an object
+        let dailyRecord = {
+            day: totalDays,
+            hoursWorked: workHours,
+            dailyWage: dailyWage
+        };
+
+        employeeDailyRecords.push(dailyRecord);
     }
 
-    console.log(`Total Days: ${totalDays}, Total Hours: ${totalWorkHours}, Total Wage: ${totalWage}`);
-    return { dailyWageMap, dailyHoursMap, totalWorkHours, totalWage };
-};
-
-// Compute total wage & total hours using Arrow Function & reduce()
-const computeTotalWageAndHours = (dailyWageMap, dailyHoursMap) => {
-    let totalWage = Array.from(dailyWageMap.values()).reduce((acc, wage) => acc + wage, 0);
-    let totalHours = Array.from(dailyHoursMap.values()).reduce((acc, hours) => acc + hours, 0);
-    return { totalWage, totalHours };
-};
-
-// Classify days using filter()
-const classifyWorkingDays = (dailyHoursMap) => {
-    let fullWorkingDays = Array.from(dailyHoursMap.entries()).filter(([day, hours]) => hours === 8).map(([day]) => day);
-    let partWorkingDays = Array.from(dailyHoursMap.entries()).filter(([day, hours]) => hours > 0 && hours < 8).map(([day]) => day);
-    let noWorkingDays = Array.from(dailyHoursMap.entries()).filter(([day, hours]) => hours === 0).map(([day]) => day);
-
-    return { fullWorkingDays, partWorkingDays, noWorkingDays };
+    return employeeDailyRecords;
 };
 
 module.exports = { 
-    calculateWageAndStoreInMap, computeTotalWageAndHours, classifyWorkingDays
+    getWorkHours, calculateEmployeeWages
 };
